@@ -10,9 +10,9 @@
 void main()
 {
     ipp s,hb_s;
-    sprintf(s.ip,"112.74.107.40");
+    sprintf(s.ip,"192.168.6.10");
     s.port=3876;
-    sprintf(hb_s.ip,"112.74.107.40");
+    sprintf(hb_s.ip,"192.168.6.10");
     hb_s.port=6565;
     if(init_leostun(0,s,hb_s)<0)
     {
@@ -28,6 +28,7 @@ void main()
         sleep(1);
         leo_send_cmd(serverip,leostun_linkrequest ,"2016010199,201657209866");
         sleep(1);
+        leo_send_dt(IO.offside,"hello");
     }
     pthread_join(recv_thread,NULL);
 }

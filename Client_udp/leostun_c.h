@@ -33,8 +33,12 @@ typedef  struct   Ipps{
 struct  session{
     ipp myslef;
     ipp offside;
+}IO;
+enum io_stat{
+   leostun_link  ,
+   leostun_readylink,
+   leostun_nolink,
 };
-
 pthread_t recv_thread;
 int s_fd;
 struct sockaddr_in serverip;
@@ -43,7 +47,7 @@ struct sockaddr_in hb_serverip;
 /*send cmd to host  ipp*/
 extern int  leo_send_cmd(struct sockaddr_in sin, char cmd, const char *value);
 /*send data to offsite client*/
-extern int  leo_send_dt(int leostun_fd,ipp s,char *value);
+extern int  leo_send_dt(ipp s,char *value);
 ipp  str2ipp(char * str);
 extern int init_leostun(int port,ipp server,ipp hb_serverip);
 void * recv_func(void *argv);
