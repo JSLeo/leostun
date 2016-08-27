@@ -10,9 +10,9 @@
 void main()
 {
     ipp s,hb_s;
-    sprintf(s.ip,"127.0.0.01");
+    sprintf(s.ip,"112.74.107.40");
     s.port=3876;
-    sprintf(hb_s.ip,"127.0.0.01");
+    sprintf(hb_s.ip,"112.74.107.40");
     hb_s.port=6565;
     if(init_leostun(0,s,hb_s)<0)
     {

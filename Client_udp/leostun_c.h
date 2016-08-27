@@ -18,6 +18,8 @@
 #define leostun_stunresponse     0x04
 #define leostun_data                   0x31
 #define leostun_data_ack            0x38
+#define leostun_get_destip          0x40
+#define leostun_get_selfip           0x41
 
 
 #define debug_leostun
@@ -42,7 +44,7 @@ struct sockaddr_in hb_serverip;
 extern int  leo_send_cmd(struct sockaddr_in sin, char cmd, const char *value);
 /*send data to offsite client*/
 extern int  leo_send_dt(int leostun_fd,ipp s,char *value);
-
+ipp  str2ipp(char * str);
 extern int init_leostun(int port,ipp server,ipp hb_serverip);
 void * recv_func(void *argv);
 #ifdef debug_leostun

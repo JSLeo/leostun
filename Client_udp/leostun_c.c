@@ -1,5 +1,8 @@
 #include "leostun_c.h"
-
+/*
+    1:linked
+    2:linking
+*/
 int step=0;
 
 void * recv_func(void *argv)
@@ -9,8 +12,6 @@ void * recv_func(void *argv)
     struct sockaddr_in sin;
     argv=argv;
     msg=malloc(sizeof(char)*1024);
-    char * buf;
-    char  values[20];
     debug("Start Listen..")
    do
     {
@@ -18,8 +19,11 @@ void * recv_func(void *argv)
         recvfrom(s_fd, msg,sizeof(char)*1024,0,(struct sockaddr *)&sin, (socklen_t*)&sin_len);
         debug("[Listen]recv msg:%s",msg);
         switch (msg[0]) {
-        case leostun_stunresponse:
-            ;;
+        case leostun_stunrequest:
+            debug("recived hole request")
+            break;
+         case leostun_stunresponse:
+            debug("get hole response")
             break;
         default:
             break;
@@ -74,10 +78,17 @@ int  leo_send_cmd(struct sockaddr_in sin,char cmd,const char *value)
     ----->   ipp.ip="192.168.10.10"
     ----->   ipp.port=9832
 */
-int str2ipp(const char * str)
+ipp  str2ipp(char * str)
 {
-
-    return 0;
+    ipp ipstr;
+    char * q;
+    char * p;
+    q=str;
+    p=strtok(q,":");
+    strcpy(ipstr.ip,p);
+    p=strtok(NULL,":");
+    ipstr.port=atoi(p);
+    return ipstr;
 }
 /*
  *  get dest ip && port

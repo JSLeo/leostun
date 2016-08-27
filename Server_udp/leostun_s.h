@@ -18,7 +18,8 @@
 #define leostun_stunresponse     0x04
 #define leostun_data                   0x31
 #define leostun_data_ack            0x38
-
+#define leostun_get_destip          0x40
+#define leostun_get_selfip           0x41
 
 #define debug_leostun
 

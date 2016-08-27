@@ -41,7 +41,7 @@ for(;;)
            res=credis_get(redis,sn_my,&msg); //if offside mechine online
            send_to_client(str2ipp(msg),leostun_linkrequest,ip);
            debug("SN_MY=>%s",msg);
-
+           if(!strstr("offline",ip))send_to_client(str2ipp(ip),leostun_stunrequest,msg);
             break;
         default:
           break;
