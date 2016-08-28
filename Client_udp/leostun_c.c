@@ -29,18 +29,16 @@ int  leo_send_dt_ack(ipp dest)
 }
 void * recv_func(void *argv)
 {
-    char * msg;
-    char *ip;
+    char * msg=NULL;
+    char ip[30];
     int sin_len;
     struct sockaddr_in sin;
     argv=argv;
     msg=malloc(sizeof(char)*512);
-    ip=malloc(sizeof(char)*25);
     debug("Start Listen..")
     for(;;)
     {
         bzero(msg,sizeof(char)*512);
-        bzero(ip,sizeof(ip));
         recvfrom(s_fd, msg,sizeof(char)*512,0,(struct sockaddr *)&sin, (socklen_t*)&sin_len);
         debug("[Listen]recv msg:%s",msg);
         strtok(msg,",");
@@ -115,8 +113,7 @@ int init_leostun(int port,ipp server,ipp hb_server,const char * sn)
 }
 int  leo_send_cmd(struct sockaddr_in sin,char cmd,const char *value)
 {
-    char *buff;
-    buff=malloc(sizeof(char)*100);
+    char buff[100];
     sprintf(buff,"%c,%s",cmd,value);
     debug("buffer :%s",buff);
     if(sendto(s_fd,buff,strlen(buff),0,(struct sockaddr *)&sin,sizeof(sin))<0)
@@ -125,7 +122,6 @@ int  leo_send_cmd(struct sockaddr_in sin,char cmd,const char *value)
                 return -1;
     }
     debug("Send commed sunccessd!")
-            free(buff);
     return 0;
 }
 /*
@@ -190,18 +186,26 @@ int leostun_hb(void)
 }
 int leostun_linknow(char * SN)
 {
-        char * p;
+        char  p[50];
         sprintf(p,"%s,%s",SNself,SN);
         leo_send_cmd(serverip,leostun_linkrequest ,p);
-        sleep(2);
-        if(io_s==leostun_nolink){
-            debug("link falie")
-            return -1;
+        for(int i=0;i<1000;i++)
+        {
+              if(io_s != leostun_nolink){
+                debug("linked ....done")
+                 return 0;
+              }
+              usleep(1000);
         }
-        return 0;
+        debug("link falie")
+        return -1;
 }
 int leostun_transmit(char * data)
 {
     leo_send_dt(IO.offside,data);
     return 0;
+}
+io_stat leostun_getlinkstatus()
+{
+    return io_s;
 }

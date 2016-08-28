@@ -17,7 +17,7 @@ void main()
     s.port=3876;
     sprintf(hb_s.ip,"112.74.107.40");
     hb_s.port=6565;
-    if(init_leostun(0,s,hb_s,"2016010199")<0)
+    if(init_leostun(0,s,hb_s,"2017")<0)
     {
         debug("Initial leostun faile!");
         exit(0);
