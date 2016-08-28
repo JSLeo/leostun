@@ -10,7 +10,8 @@ void * recv_func(void *argv)
     int sin_len;
     char sn_my[20];
     char sn[20];
-    char ip[20];
+    char ip[25];
+    char ip_2[25];
     char buff[500];
     int res;
     REDIS redis;
@@ -37,11 +38,10 @@ for(;;)
            res=credis_get(redis,sn,&msg); //if offside mechine online
            if(res<0)strcpy(ip,"offline");
            else{strcpy(ip,msg);}
-           debug("SN_U=>%s",ip);
-           res=credis_get(redis,sn_my,&msg); //if offside mechine online
+           credis_get(redis,sn_my,&msg); //if offside mechine online
+           memcpy(ip_2,msg,sizeof(char)*25);
            send_to_client(str2ipp(msg),leostun_linkrequest,ip);
-           debug("SN_MY=>%s",msg);
-           if(!strstr("offline",ip))send_to_client(str2ipp(ip),leostun_stunrequest,msg);
+           if(!strstr("offline",ip))send_to_client(str2ipp(ip),leostun_stunrequest,ip_2);
             break;
         default:
           break;
