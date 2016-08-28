@@ -1,0 +1,3 @@
+/home/leonard/QtProjects/leostun/Client_udp/build-Client_udp-Desktop-Default/CMakeFiles/edit_cache.dir
+/home/leonard/QtProjects/leostun/Client_udp/build-Client_udp-Desktop-Default/CMakeFiles/rebuild_cache.dir
+/home/leonard/QtProjects/leostun/Client_udp/build-Client_udp-Desktop-Default/CMakeFiles/Client_udp.dir

@@ -6,29 +6,30 @@
 #include <pthread.h>
 
 
-
+void ddd(char * p)
+{
+    debug("===================++>%s",p);
+}
 void main()
 {
     ipp s,hb_s;
-    sprintf(s.ip,"192.168.6.10");
+    sprintf(s.ip,"112.74.107.40");
     s.port=3876;
-    sprintf(hb_s.ip,"192.168.6.10");
+    sprintf(hb_s.ip,"112.74.107.40");
     hb_s.port=6565;
-    if(init_leostun(0,s,hb_s)<0)
+    if(init_leostun(0,s,hb_s,"2016010199")<0)
     {
         debug("Initial leostun faile!");
         exit(0);
     }
+    leostun_rx_opt(ddd);
     debug("Wait for thread exit")
 
     for(;;)
     {
-        leo_send_cmd(hb_serverip,leostun_heartbeat,"2016010199");
-        debug("Send HB");
+        leostun_hb();
         sleep(1);
-        leo_send_cmd(serverip,leostun_linkrequest ,"2016010199,201657209866");
-        sleep(1);
-        leo_send_dt(IO.offside,"hello");
+        leostun_transmit("nihao");
     }
     pthread_join(recv_thread,NULL);
 }

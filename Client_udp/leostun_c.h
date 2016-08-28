@@ -34,23 +34,33 @@ struct  session{
     ipp myslef;
     ipp offside;
 }IO;
+
 enum io_stat{
    leostun_link  ,
    leostun_readylink,
    leostun_nolink,
 };
+
+typedef  void (*rxfunc)(char *);
 pthread_t recv_thread;
 int s_fd;
+
+
+
 struct sockaddr_in serverip;
 struct sockaddr_in destip;
 struct sockaddr_in hb_serverip;
 /*send cmd to host  ipp*/
-extern int  leo_send_cmd(struct sockaddr_in sin, char cmd, const char *value);
+int  leo_send_cmd(struct sockaddr_in sin, char cmd, const char *value);
 /*send data to offsite client*/
-extern int  leo_send_dt(ipp s,char *value);
+int  leo_send_dt(ipp s,char *value);
 ipp  str2ipp(char * str);
-extern int init_leostun(int port,ipp server,ipp hb_serverip);
-void * recv_func(void *argv);
+int init_leostun(int port,ipp server,ipp hb_serverip,const char * sn);
+int leostun_linknow(char * SN);
+int leostun_transmit(char * data);
+int leostun_rx_opt(rxfunc f);
+int leostun_hb(void);
+
 #ifdef debug_leostun
 #define debug(...)      \
     do{     \

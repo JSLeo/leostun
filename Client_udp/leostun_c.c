@@ -5,6 +5,13 @@
     3.ready for offside IP
 */
 enum io_stat io_s=leostun_nolink;
+rxfunc rx;
+const char * SNself;
+int leostun_rx_opt(rxfunc f)
+{
+    rx=f;
+    return 0;
+}
 int  leo_send_dt_ack(ipp dest)
 {
     struct sockaddr_in sin;
@@ -33,6 +40,7 @@ void * recv_func(void *argv)
     for(;;)
     {
         bzero(msg,sizeof(char)*512);
+        bzero(ip,sizeof(ip));
         recvfrom(s_fd, msg,sizeof(char)*512,0,(struct sockaddr *)&sin, (socklen_t*)&sin_len);
         debug("[Listen]recv msg:%s",msg);
         strtok(msg,",");
@@ -43,10 +51,15 @@ void * recv_func(void *argv)
              IO.offside.port=ntohs(sin.sin_port);
              debug("Received Offside data");
              leo_send_dt_ack(IO.offside);
+             msg=strtok(NULL,",");
+             rx(msg);
             break;
         case leostun_stunrequest:
-            debug("recived hole request")
-                    break;
+            io_s=leostun_readylink;
+            strcpy(ip,strtok(NULL,","));
+            debug("recived hole request:%s",ip)
+            leo_send_dt(str2ipp(ip),"hello");
+            break;
         case leostun_stunresponse:
             debug("get hole response")
                     break;
@@ -63,6 +76,7 @@ void * recv_func(void *argv)
             break;
         case leostun_data_ack:
                   debug("Data Ack...");
+                  io_s=leostun_link;
             break;
         default:
             break;
@@ -71,9 +85,10 @@ void * recv_func(void *argv)
     free(msg);
 }
 //default port is 38765
-int init_leostun(int port,ipp server,ipp hb_server)
+int init_leostun(int port,ipp server,ipp hb_server,const char * sn)
 {
     struct sockaddr_in sin;
+    SNself=sn;
     bzero(&sin, sizeof(sin));
     sin.sin_family = AF_INET;
     sin.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -94,6 +109,7 @@ int init_leostun(int port,ipp server,ipp hb_server)
     hb_serverip.sin_port=htons(hb_server.port);
     hb_serverip.sin_addr.s_addr=inet_addr(hb_server.ip);
     hb_serverip.sin_family=AF_INET;
+    leo_send_cmd(serverip,0,"->");
     pthread_create(&recv_thread,NULL,recv_func,NULL);
     return s_fd;
 }
@@ -154,9 +170,38 @@ ipp * get_srcip(const char *sn)
      if(io_s==leostun_readylink||io_s==leostun_link)
      {
          leo_send_cmd(sin,leostun_data,value);
+         io_s=leostun_nolink;
      }else{
          debug("no Link now!Link first")
          return -1;
      }
     return 0;
  }
+int leostun_hb(void)
+{
+    int res=0;
+    res=leo_send_cmd(hb_serverip,leostun_heartbeat,SNself);
+    if(res<0){
+        debug("Send HB Faile!")
+        return -1;
+    }
+    debug("Send HB");
+    return 0;
+}
+int leostun_linknow(char * SN)
+{
+        char * p;
+        sprintf(p,"%s,%s",SNself,SN);
+        leo_send_cmd(serverip,leostun_linkrequest ,p);
+        sleep(2);
+        if(io_s==leostun_nolink){
+            debug("link falie")
+            return -1;
+        }
+        return 0;
+}
+int leostun_transmit(char * data)
+{
+    leo_send_dt(IO.offside,data);
+    return 0;
+}
