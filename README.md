@@ -9,8 +9,6 @@ UDP NAT-traversal leostun protopol
 - 4,simple code
 
 
-#Howto?
+#HowtoUsed
 
-'''c
-1. git clone 
-'''
+
