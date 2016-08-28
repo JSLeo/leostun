@@ -67,6 +67,7 @@ void * recv_func(void *argv)
             if(!strstr("offline",ip)){
                    IO.offside=str2ipp(ip);
                     debug("Result:%s,%d",IO.offside.ip,IO.offside.port);
+                    leo_send_dt_ack(IO.offside);
                     io_s=leostun_readylink;
             }else{
                     io_s=leostun_nolink;
@@ -141,6 +142,7 @@ ipp  str2ipp(char * str)
     ipstr.port=atoi(p);
     return ipstr;
 }
+
 /*
  *  get dest ip && port
 */
@@ -156,6 +158,11 @@ ipp * get_srcip(const char *sn)
 {
 
     return 0;
+}
+//get all of online sn
+char  * get_onlineSN()
+{
+      return NULL;
 }
  int  leo_send_dt(ipp dest,char *value)
  {
@@ -205,7 +212,7 @@ int leostun_transmit(char * data)
     leo_send_dt(IO.offside,data);
     return 0;
 }
-io_stat leostun_getlinkstatus()
+enum io_stat leostun_getlinkstatus()
 {
     return io_s;
 }

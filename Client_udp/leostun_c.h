@@ -60,7 +60,7 @@ int leostun_linknow(char * SN);
 int leostun_transmit(char * data);
 int leostun_rx_opt(rxfunc f);
 int leostun_hb(void);
-io_stat leostun_getlinkstatus();
+enum io_stat leostun_getlinkstatus();
 
 #ifdef debug_leostun
 #define debug(...)      \
