@@ -12,7 +12,7 @@ void * recv_func(void *argv)
     char sn[20];
     char ip[25];
     char ip_2[25];
-    char buff[500];
+    char buff[512];
     int res;
     REDIS redis;
     struct session IO;
